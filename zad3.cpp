@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// Генерация псевдослучайного числа в диапазоне от 1 до 100
 int generateRandomNumber() {
     random_device rd;
     ranlux48 engine(rd());
@@ -13,12 +14,14 @@ int generateRandomNumber() {
     return dist(engine);
 }
 
+// Заполнение массива заданного размера случайными числами
 void fillArray(vector<int>& arr, int size) {
     for (int i = 0; i < size; ++i) {
         arr.push_back(generateRandomNumber());
     }
 }
 
+// Вычисление критерия хи-квадрат
 double chiSquareTest(const vector<int>& observed, const vector<int>& expected) {
     double chiSquare = 0.0;
     for (size_t i = 0; i < observed.size(); ++i) {
@@ -27,10 +30,12 @@ double chiSquareTest(const vector<int>& observed, const vector<int>& expected) {
     return chiSquare;
 }
 
+// Проверка гипотезы
 bool hypothesisTest(double chiSquare, double criticalValue) {
     return chiSquare > criticalValue;
 }
 
+// Расчет ожидаемого значения
 vector<int> calculateExpected(const vector<int>& observed) {
     vector<int> expected(observed.size(), 50); // В данном случае просто задаем ожидаемое значение как 50 для каждого элемента
     return expected;
@@ -42,7 +47,7 @@ int main() {
     fillArray(array50, 50);
     fillArray(array100, 100);
     fillArray(array1000, 1000);
-    double criticalValue = 100;
+    double criticalValue = 100; // Значение для критического уровня
 
     vector<int> expected = calculateExpected(array1000);
     double chiSquare = chiSquareTest(array1000, expected);
