@@ -1,63 +1,73 @@
 #include <iostream>
-#include <cmath>
-#include <vector>
-#include <cstdlib>
+#include <Windows.h>
 #include <random>
-
+#include <vector>
 using namespace std;
-
-// Генерация псевдослучайного числа в диапазоне от 1 до 100
-int generateRandomNumber() {
+const int n1 = 50, n2 = 100, n3 = 1000;
+void generateRandomNumber(int* arr, int n) {
     random_device rd;
     ranlux48 engine(rd());
     uniform_int_distribution<int> dist(1, 100); // Задавать диапазон для генерации чисел
-    return dist(engine);
+    for (int i = 0; i < n; i++) {
+		arr[i] = dist(engine);
+	}
 }
 
-// Заполнение массива заданного размера случайными числами
-void fillArray(vector<int>& arr, int size) {
-    for (int i = 0; i < size; ++i) {
-        arr.push_back(generateRandomNumber());
-    }
+int X2(int arr[], int n) {
+	const int iter = 25;
+	int sum[iter] = { 0 };
+	int mat = 0;
+	for (int i = 0; i < n;i++) {
+		//Делим интервалы и подсчитываем колличество в них
+		sum[arr[i] * iter / 101]++;
+		mat += arr[i];
+	}
+	float x = 0;
+	cout << "Кол-во i элементов в 25 интервалах" << endl;
+	for (int i : sum) {
+		cout << i << " ";
+		// i кол элем в интервалов
+		// n1 / iter - ожидаемо
+		x += float((i - (n / iter)) * (i - (n / iter))) / (n / iter);
+	}
+	cout << endl<<"Мат ожидание ожидание: 50,5 реальность: "<<mat/n<<endl;
+	return x;
 }
-
-// Вычисление критерия хи-квадрат
-double chiSquareTest(const vector<int>& observed, const vector<int>& expected) {
-    double chiSquare = 0.0;
-    for (size_t i = 0; i < observed.size(); ++i) {
-        chiSquare += pow(observed[i] - expected[i], 2) / expected[i];
-    }
-    return chiSquare;
-}
-
-// Проверка гипотезы
-bool hypothesisTest(double chiSquare, double criticalValue) {
-    return chiSquare > criticalValue;
-}
-
-// Расчет ожидаемого значения
-vector<int> calculateExpected(const vector<int>& observed) {
-    vector<int> expected(observed.size(), 50); // В данном случае просто задаем ожидаемое значение как 50 для каждого элемента
-    return expected;
-}
-
 int main() {
-    system("chcp 65001");
-    vector<int> array50, array100, array1000;
-    fillArray(array50, 50);
-    fillArray(array100, 100);
-    fillArray(array1000, 1000);
-    double criticalValue = 100; // Значение для критического уровня
-
-    vector<int> expected = calculateExpected(array1000);
-    double chiSquare = chiSquareTest(array1000, expected);
-
-    bool hypothesisResult = hypothesisTest(chiSquare, criticalValue);
-
-    cout << "Результат проверки гипотезы: " << (hypothesisResult ? "Отклонить" : "Принять") << endl;
-    cout << "Ожидаемое математическое ожидание: " << expected[0] << endl;
-    double realMean = accumulate(array100.begin(), array100.end(), 0) / static_cast<double>(array100.size());
-    cout << "Реальное математическое ожидание: " << realMean << endl;
-
-    return 0;
+	system ("chcp 65001");
+	int arr1[n1];
+	generateRandomNumber(arr1, n1);
+	int arr2[n2];
+	generateRandomNumber(arr2, n2);
+	int arr3[n3];
+	generateRandomNumber(arr3, n3);
+	float krit = 44.314;
+	cout << " Для массива на 50 элементов " << endl;
+	//Результат проврки гипотезы 
+	int x = X2(arr1, n1);
+	cout << " x^2 : " << x<< endl;
+	if (x < krit) {
+		cout << "Гипотеза о нормальном распределении принимается."<<endl;
+	}
+	else {
+		cout << "Гипотеза о нормальном распределении отклоняется." << endl;
+	}
+	cout << " Для массива на 100 элементов " << endl;
+	x = X2(arr2, n2);
+	cout << " x^2 : " << x << endl;
+	if (x < krit) {
+		cout << "Гипотеза о нормальном распределении принимается." << endl;
+	}
+	else {
+		cout << "Гипотеза о нормальном распределении отклоняется." << endl;
+	}
+	cout << " Для массива на 1000 элементов " << endl;
+	x = X2(arr3, n3);
+	cout << " x^2 : " << x << endl;
+	if (x < krit) {
+		cout << "Гипотеза о нормальном распределении принимается." << endl;
+	}
+	else {
+		cout << "Гипотеза о нормальном распределении отклоняется." << endl;
+	}
 }
