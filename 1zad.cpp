@@ -6,12 +6,12 @@ using namespace std;
 
 // Функция для расчета значения исходного уравнения
 double func(double x) {
-    return x * log(x + 1) - 1;
+    return (x * log(x + 1) - 1);
 }
 
 // Функция для расчета производной исходной функции
 double derivative(double x) {
-    return log(x + 1) + x / (x + 1);
+    return x / (x + 1) + log(x + 1);
 }
 
 // Метод Ньютона для решения уравнения
@@ -20,7 +20,7 @@ void newtonMethod(double x0, double epsilon) {
     double xn = x0, xn1, diff;
     
     cout << fixed << setprecision(6);
-    cout << "| N  |    xn    |     xn+1     | xn+1 – xn |\n";
+    cout << "| N  |    xn    |     xn+1 | xn+1 – xn|\n";
     
     do {
         xn1 = xn - func(xn) / derivative(xn);
@@ -39,7 +39,7 @@ void simpleIterationMethod(double x0, double epsilon) {
     double xn = x0, xn1, diff;
     // Вывод таблицы с результатами иллюстрирующей шаги метода простых итераций
     cout << fixed << setprecision(6);
-    cout << "| N  |    xn    |     xn+1     | xn+1 – xn |\n";
+    cout << "| N  |    xn    |     xn+1 | xn+1 – xn|\n";
     
     do {
          // Применение формулы для метода простых итераций
@@ -89,6 +89,7 @@ void bisectionMethod(double a, double b, double epsilon) {
 }
 
 int main() {
+    system ("chcp 65001");
     double a = 0.1; // начальное значение интервала [a, b]
     double b = 2.0; // начальное значение интервала [a, b]
     double x0 = 0.1; // начальное приближение
