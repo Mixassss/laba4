@@ -26,14 +26,14 @@ for (int i = 0; i < N * 10; ++i) {
         }
     }
     system("chcp 65001");
-const int n = 15; // Размер массива (не менее 10)
+const int razmer = 15; // Размер массива (не менее 10)
 vector<int> numbers(n);
 
 // Генерация случайных чисел и заполнение массива
 random_device rd;
     ranlux48 engine(rd());
     uniform_int_distribution<int> dist(1, 100);
-for (int i = 0; i < n; ++i) {
+for (int i = 0; i < razmer; ++i) {
 numbers[i] = dist(engine);
 }
 
@@ -49,7 +49,7 @@ int max_index = max_element(numbers.begin(), numbers.end()) - numbers.begin();
 
 // Находим второй максимальный элемент, исключая первый
 int second_max_index = min_index; // Инициализируем индексом минимального (на случай, если все элементы равны)
-for (int i = 0; i < n; ++i) {
+for (int i = 0; i < razmer; ++i) {
 if (numbers[i] > numbers[second_max_index] && i != max_index) {
 second_max_index = i;
 }
