@@ -27,7 +27,7 @@ for (int i = 0; i < N * 10; ++i) {
     }
     system("chcp 65001");
 const int razmer = 15; // Размер массива (не менее 10)
-vector<int> numbers(n);
+vector<int> numbers(N);
 
 // Генерация случайных чисел и заполнение массива
 random_device rd;
