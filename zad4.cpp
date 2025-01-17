@@ -1,61 +1,92 @@
 #include <iostream>
 #include <vector>
-#include <cstdlib>
+#include <Windows.h>
 #include <ctime>
+#include <cstdlib>
+
 using namespace std;
 
-bool func(int round_number, vector<bool>& self_choices, vector<bool>& enemy_choices) {
-    // код для алгоритма
-    if (round_number == 0) {
-        return true; // В начале игры всегда сотрудничаем
-    } else {
-        // Расчет стратегии алгоритма на основе предыдущих раундов
-        int total_rounds = self_choices.size();
-        int self_cooperate_count = 0, enemy_cooperate_count = 0;
+// Типы выбора
+const bool COOPERATE = true;
+const bool BETRAY = false;
 
-        for (int i = 0; i < total_rounds; ++i) {
-            if (self_choices[i] == true) {
-                self_cooperate_count++;
-            }
-            if (enemy_choices[i] == true) {
-                enemy_cooperate_count++;
-            }
-        }
-
-        // Пример простой стратегии: если противник предал на предыдущем раунде, тогда предаем, иначе сотрудничаем
-        if (enemy_choices[round_number - 1] == false) {
-            return false;
-        } else {
-            return true;
-        }
+// Подсчет очков
+pair<int, int> calculateScores(bool choiceA, bool choiceB) {
+    if (choiceA == COOPERATE && choiceB == COOPERATE) {
+        return {24, 24};
+    } else if (choiceA == COOPERATE && choiceB == BETRAY) {
+        return {0, 20};
+    } else if (choiceA == BETRAY && choiceB == COOPERATE) {
+        return {20, 0};
+    } else { // BETRAY && BETRAY
+        return {4, 4};
     }
 }
 
+// Алгоритм 1: Всегда сотрудничать
+bool alwaysCooperate(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
+    return COOPERATE;
+}
+
+// Алгоритм 2: Всегда предавать
+bool alwaysBetray(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
+    return BETRAY;
+}
+
+// Алгоритм 3: Повторяет выбор противника из прошлого раунда)
+bool titForTat(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
+    if (round_number == 0) {
+        return COOPERATE; // Первый ход всегда сотрудничество
+    }
+    return enemy_choices.back();
+}
+
+// Запуск игры между двумя алгоритмами
+void playGame(bool (*algorithmA)(int, const vector<bool>&, const vector<bool>&),
+              bool (*algorithmB)(int, const vector<bool>&, const vector<bool>&)) {
+    int rounds = 100 + rand() % 101; // Количество раундов от 100 до 200
+    vector<bool> choicesA, choicesB;
+    int scoreA = 0, scoreB = 0;
+
+    cout << "Игра началась! Количество раундов: " << rounds << endl;
+
+    for (int i = 0; i < rounds; ++i) {
+        // Получение выбора обоих алгоритмов
+        bool choiceA = algorithmA(i, choicesA, choicesB);
+        bool choiceB = algorithmB(i, choicesB, choicesA);
+
+        // Сохранение выборов
+        choicesA.push_back(choiceA);
+        choicesB.push_back(choiceB);
+
+        // Подсчет очков
+        auto scores = calculateScores(choiceA, choiceB);
+        scoreA += scores.first;
+        scoreB += scores.second;
+
+        cout << "Раунд " << i + 1 << ": A выбрал " << (choiceA ? "Сотрудничество" : "Предательство")
+             << ", B выбрал " << (choiceB ? "Сотрудничество" : "Предательство") << endl;
+    }
+
+    cout << "Игра окончена!" << endl;
+    cout << "Итоговый счет: A = " << scoreA << ", B = " << scoreB << endl;
+}
+
+// Тестирование алгоритмов
 int main() {
-    srand(time(0));
+    SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+    srand(time(0)); // Инициализация генератора случайных чисел
 
-    int num_rounds = rand() % 101 + 100; // Генерация случайного количества раундов от 100 до 200
-    vector<bool> self_choices;
-    vector<bool> enemy_choices;
+    // Запуск игр
+    cout << "Игра 1: Всегда сотрудничает vs Всегда предает" << endl;
+    playGame(alwaysCooperate, alwaysBetray);
 
-    for (int i = 0; i < num_rounds; ++i) {
-        self_choices.push_back(func(i, self_choices, enemy_choices));
-        enemy_choices.push_back(rand() % 2); // Генерация случайного выбора противника: 0 - предательство, 1 - сотрудничество
-    }
+    cout << "\nИгра 2: Всегда предает vs Повторяет выбор противника" << endl;
+    playGame(alwaysBetray, titForTat);
 
-    // Вывод результатов
-    for (int i = 0; i < num_rounds; ++i) {
-        cout << "Раунд " << i << ": ";
-        if (self_choices[i] && enemy_choices[i]) {
-            cout << "Оба сотрудничают. Каждый получает 24 очка.\n";
-        } else if (!self_choices[i] && !enemy_choices[i]) {
-            cout << "Оба предали. Каждый получает 4 очка.\n";
-        } else if (self_choices[i] && !enemy_choices[i]) {
-            cout << "Алгоритм А сотрудничает, алгоритм Б предал. А: 0 очков, Б: 20 очков.\n";
-        } else {
-            cout << "Алгоритм А предал, алгоритм Б сотрудничает. А: 20 очков, Б: 0 очков.\n";
-        }
-    }
+    cout << "\nИгра 3: Повторяет выбор противника vs Всегда сотрудничает" << endl;
+    playGame(titForTat, alwaysCooperate);
 
     return 0;
 }
