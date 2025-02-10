@@ -6,11 +6,11 @@
 
 using namespace std;
 
-// РўРёРїС‹ РІС‹Р±РѕСЂР°
+// Типы выбора
 const bool COOPERATE = true;
 const bool BETRAY = false;
 
-// РџРѕРґСЃС‡РµС‚ РѕС‡РєРѕРІ
+// Подсчет очков
 pair<int, int> calculateScores(bool choiceA, bool choiceB) {
     if (choiceA == COOPERATE && choiceB == COOPERATE) {
         return {24, 24};
@@ -23,69 +23,69 @@ pair<int, int> calculateScores(bool choiceA, bool choiceB) {
     }
 }
 
-// РђР»РіРѕСЂРёС‚Рј 1: Р’СЃРµРіРґР° СЃРѕС‚СЂСѓРґРЅРёС‡Р°С‚СЊ
+// Алгоритм 1: Всегда сотрудничать
 bool alwaysCooperate(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
     return COOPERATE;
 }
 
-// РђР»РіРѕСЂРёС‚Рј 2: Р’СЃРµРіРґР° РїСЂРµРґР°РІР°С‚СЊ
+// Алгоритм 2: Всегда предавать
 bool alwaysBetray(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
     return BETRAY;
 }
 
-// РђР»РіРѕСЂРёС‚Рј 3: РџРѕРІС‚РѕСЂСЏРµС‚ РІС‹Р±РѕСЂ РїСЂРѕС‚РёРІРЅРёРєР° РёР· РїСЂРѕС€Р»РѕРіРѕ СЂР°СѓРЅРґР°)
+// Алгоритм 3: Повторяет выбор противника из прошлого раунда)
 bool titForTat(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
     if (round_number == 0) {
-        return COOPERATE; // РџРµСЂРІС‹Р№ С…РѕРґ РІСЃРµРіРґР° СЃРѕС‚СЂСѓРґРЅРёС‡РµСЃС‚РІРѕ
+        return COOPERATE; // Первый ход всегда сотрудничество
     }
     return enemy_choices.back();
 }
 
-// Р—Р°РїСѓСЃРє РёРіСЂС‹ РјРµР¶РґСѓ РґРІСѓРјСЏ Р°Р»РіРѕСЂРёС‚РјР°РјРё
+// Запуск игры между двумя алгоритмами
 void playGame(bool (*algorithmA)(int, const vector<bool>&, const vector<bool>&),
               bool (*algorithmB)(int, const vector<bool>&, const vector<bool>&)) {
-    int rounds = 100 + rand() % 101; // РљРѕР»РёС‡РµСЃС‚РІРѕ СЂР°СѓРЅРґРѕРІ РѕС‚ 100 РґРѕ 200
+    int rounds = 100 + rand() % 101; // Количество раундов от 100 до 200
     vector<bool> choicesA, choicesB;
     int scoreA = 0, scoreB = 0;
 
-    cout << "РРіСЂР° РЅР°С‡Р°Р»Р°СЃСЊ! РљРѕР»РёС‡РµСЃС‚РІРѕ СЂР°СѓРЅРґРѕРІ: " << rounds << endl;
+    cout << "Игра началась! Количество раундов: " << rounds << endl;
 
     for (int i = 0; i < rounds; ++i) {
-        // РџРѕР»СѓС‡РµРЅРёРµ РІС‹Р±РѕСЂР° РѕР±РѕРёС… Р°Р»РіРѕСЂРёС‚РјРѕРІ
+        // Получение выбора обоих алгоритмов
         bool choiceA = algorithmA(i, choicesA, choicesB);
         bool choiceB = algorithmB(i, choicesB, choicesA);
 
-        // РЎРѕС…СЂР°РЅРµРЅРёРµ РІС‹Р±РѕСЂРѕРІ
+        // Сохранение выборов
         choicesA.push_back(choiceA);
         choicesB.push_back(choiceB);
 
-        // РџРѕРґСЃС‡РµС‚ РѕС‡РєРѕРІ
+        // Подсчет очков
         auto scores = calculateScores(choiceA, choiceB);
         scoreA += scores.first;
         scoreB += scores.second;
 
-        cout << "Р Р°СѓРЅРґ " << i + 1 << ": A РІС‹Р±СЂР°Р» " << (choiceA ? "РЎРѕС‚СЂСѓРґРЅРёС‡РµСЃС‚РІРѕ" : "РџСЂРµРґР°С‚РµР»СЊСЃС‚РІРѕ")
-             << ", B РІС‹Р±СЂР°Р» " << (choiceB ? "РЎРѕС‚СЂСѓРґРЅРёС‡РµСЃС‚РІРѕ" : "РџСЂРµРґР°С‚РµР»СЊСЃС‚РІРѕ") << endl;
+        cout << "Раунд " << i + 1 << ": A выбрал " << (choiceA ? "Сотрудничество" : "Предательство")
+             << ", B выбрал " << (choiceB ? "Сотрудничество" : "Предательство") << endl;
     }
 
-    cout << "РРіСЂР° РѕРєРѕРЅС‡РµРЅР°!" << endl;
-    cout << "РС‚РѕРіРѕРІС‹Р№ СЃС‡РµС‚: A = " << scoreA << ", B = " << scoreB << endl;
+    cout << "Игра окончена!" << endl;
+    cout << "Итоговый счет: A = " << scoreA << ", B = " << scoreB << endl;
 }
 
-// РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ Р°Р»РіРѕСЂРёС‚РјРѕРІ
+// Тестирование алгоритмов
 int main() {
     SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-    srand(time(0)); // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РіРµРЅРµСЂР°С‚РѕСЂР° СЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР»
+    srand(time(0)); // Инициализация генератора случайных чисел
 
-    // Р—Р°РїСѓСЃРє РёРіСЂ
-    cout << "РРіСЂР° 1: Р’СЃРµРіРґР° СЃРѕС‚СЂСѓРґРЅРёС‡Р°РµС‚ vs Р’СЃРµРіРґР° РїСЂРµРґР°РµС‚" << endl;
+    // Запуск игр
+    cout << "Игра 1: Всегда сотрудничает vs Всегда предает" << endl;
     playGame(alwaysCooperate, alwaysBetray);
 
-    cout << "\nРРіСЂР° 2: Р’СЃРµРіРґР° РїСЂРµРґР°РµС‚ vs РџРѕРІС‚РѕСЂСЏРµС‚ РІС‹Р±РѕСЂ РїСЂРѕС‚РёРІРЅРёРєР°" << endl;
+    cout << "\nИгра 2: Всегда предает vs Повторяет выбор противника" << endl;
     playGame(alwaysBetray, titForTat);
 
-    cout << "\nРРіСЂР° 3: РџРѕРІС‚РѕСЂСЏРµС‚ РІС‹Р±РѕСЂ РїСЂРѕС‚РёРІРЅРёРєР° vs Р’СЃРµРіРґР° СЃРѕС‚СЂСѓРґРЅРёС‡Р°РµС‚" << endl;
+    cout << "\nИгра 3: Повторяет выбор противника vs Всегда сотрудничает" << endl;
     playGame(titForTat, alwaysCooperate);
 
     return 0;

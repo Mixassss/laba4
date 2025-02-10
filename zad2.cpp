@@ -8,7 +8,7 @@
 
 using namespace std;
 
-vector<int> generateArray(int n, int minChis, int maxChis) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РіРµРЅРµСЂР°С†РёРё СЃР»СѓС‡Р°Р№РЅРѕРіРѕ РјР°СЃСЃРёРІР° >= 10
+vector<int> generateArray(int n, int minChis, int maxChis) { // Функция для генерации случайного массива >= 10
     vector<int> arr(n);
     for (int &num : arr) {
         num = minChis + rand() % (maxChis - minChis + 1);
@@ -16,15 +16,15 @@ vector<int> generateArray(int n, int minChis, int maxChis) { // Р¤СѓРЅРєС†РёСЏ Р
     return arr;
 }
 
-int findMinIndex(vector<int> &arr) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РЅР°С…РѕР¶РґРµРЅРёСЏ РёРЅРґРµРєСЃР° РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+int findMinIndex(vector<int> &arr) { // Функция для нахождения индекса минимального элемента
     return min_element(arr.begin(), arr.end()) - arr.begin();
 }
 
-int findMaxSecondIndex(vector<int> &arr) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РЅР°С…РѕР¶РґРµРЅРёСЏ РёРЅРґРµРєСЃР° РІС‚РѕСЂРѕРіРѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+int findMaxSecondIndex(vector<int> &arr) { // Функция для нахождения индекса второго максимального элемента
     int maxVal = *std::max_element(arr.begin(), arr.end());
         int secondMaxIndex = -1;
         bool found = false;
-        for (size_t i = 0; i < arr.size(); ++i) { // РЈСЃР»РѕРІРёСЏ РґР»СЏ РїРѕРёСЃРєР° РІС‚РѕСЂРѕРіРѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+        for (size_t i = 0; i < arr.size(); ++i) { // Условия для поиска второго максимального элемента
             if (arr[i] < maxVal) {
                 if (!found || arr[i] > arr[secondMaxIndex]) {
                     secondMaxIndex = i;
@@ -35,17 +35,17 @@ int findMaxSecondIndex(vector<int> &arr) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РЅР°С…РѕР¶Рґ
     return secondMaxIndex;
 }
 
-void modArray(vector<int> &arr) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РјРѕРґРёС„РёРєР°С†РёРё РјР°СЃСЃРёРІР°
-    if (!arr.empty()) { // РџСЂРѕРІРµСЂРєР° РµСЃР»Рё РјР°СЃСЃРёРІ РЅРµ РїСѓСЃС‚РѕР№
+void modArray(vector<int> &arr) { // Функция для модификации массива
+    if (!arr.empty()) { // Проверка если массив не пустой
         int first = arr[0];
         arr.erase(arr.begin());
         arr.push_back(first);
     }
 }
 
-void printArray(vector<int> &arr ,int N) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РІС‹РІРѕРґР° РјР°СЃСЃРёРІР°
+void printArray(vector<int> &arr ,int N) { // Функция для вывода массива
     for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < 10; ++j) { // РњР°СЃСЃРёРІ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅРµ РјРµРЅСЊС€Рµ 10
+        for (int j = 0; j < 10; ++j) { // Массив должен быть не меньше 10
             cout << setw(3) << arr[i * 10 + j] << " ";
         }
         cout << endl;
@@ -55,42 +55,42 @@ void printArray(vector<int> &arr ,int N) { // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РІС‹РІРѕРґР°
 int main() {
     SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-    srand(time(0)); // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РіРµРЅРµСЂР°С‚РѕСЂ СЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР»
+    srand(time(0)); // Инициализируем генератор случайных чисел
 
-    int n; // Р“РµРЅРµСЂР°С†РёСЏ РјР°СЃСЃРёРІР°
-    cout << "Р’РІРµРґРёС‚Рµ СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° (n >= 10): ";
+    int n; // Генерация массива
+    cout << "Введите размер массива (n >= 10): ";
     cin >> n;
-    if (n < 10) { // РџСЂРѕРІРµСЂРєР° СЂР°Р·РјРµСЂР° РјР°СЃСЃРёРІР°
-        cerr << "РћС€РёР±РєР°! Р Р°Р·РјРµСЂ РјР°СЃСЃРёРІР° РЅРµ СѓРґРѕРІР»РµС‚РІРѕСЂСЏРµС‚ СѓСЃР»РѕРІРёСЋ!" << endl;
+    if (n < 10) { // Проверка размера массива
+        cerr << "Ошибка! Размер массива не удовлетворяет условию!" << endl;
         return 1;
     }
 
     vector<int> arr = generateArray(n, 0, 100);
-    cout << "РСЃС…РѕРґРЅС‹Р№ РјР°СЃСЃРёРІ: " << endl;
-    for (int num : arr) cout << num << " "; // Р’С‹РІРѕРґ РјР°СЃСЃРёРІР°
+    cout << "Исходный массив: " << endl;
+    for (int num : arr) cout << num << " "; // Вывод массива
     cout << endl;
 
     int minIndex = findMinIndex(arr);
     int secMaxIndex = findMaxSecondIndex(arr);
-    if (secMaxIndex != -1) { // РћР±РјРµРЅ РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ Рё РІС‚РѕСЂРѕРіРѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЌР»РµРјРµРЅС‚РѕРІ
+    if (secMaxIndex != -1) { // Обмен минимального и второго максимального элементов
         swap(arr[minIndex], arr[secMaxIndex]);
     }
 
-    cout << "РњР°СЃСЃРёРІ РїРѕСЃР»Рµ РёР·РјРµРЅРµРЅРёСЏ: " << endl;
-    for (int num : arr) cout << num << " "; // Р’С‹РІРѕРґ РёР·РјРµРЅРµРЅРЅРѕРіРѕ РјР°СЃСЃРёРІР°
+    cout << "Массив после изменения: " << endl;
+    for (int num : arr) cout << num << " "; // Вывод измененного массива
     cout << endl;
 
-    modArray(arr); // РњРѕРґРёС„РёРєР°С†РёСЏ РјР°СЃСЃРёРІР°
+    modArray(arr); // Модификация массива
 
-    cout << "РњР°СЃСЃРёРІ РїРѕСЃР»Рµ РјРѕРґРёС„РёРєР°С†РёРё: " << endl;
-    for (int num : arr) cout << num << " "; // Р’С‹РІРѕРґ РјРѕРґРёС„РёС†РёСЂРѕРІР°РЅРЅРѕРіРѕ РјР°СЃСЃРёРІР°
+    cout << "Массив после модификации: " << endl;
+    for (int num : arr) cout << num << " "; // Вывод модифицированного массива
     cout << endl;
 
-    int N; // РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
-    cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РґР»СЏ РІС‹РІРѕРґР° РјР°СЃСЃРёРІР° С„РѕСЂРјР°С‚Р° N x 10: ";
+    int N; // Количество строк
+    cout << "Введите количество строк для вывода массива формата N x 10: ";
     cin >> N;
     if (N <= 0) {
-        cerr << "РћС€РёР±РєР°! РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє N РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј С‡РёСЃР»РѕРј!";
+        cerr << "Ошибка! Количество строк N должно быть положительным числом!";
         return 1;
     }
     vector<int> outputArray(N * 10);
@@ -98,7 +98,7 @@ int main() {
         outputArray[i] = 10 + i;
     }
 
-    cout << "Р’С‹РІРѕРґ РјР°СЃСЃРёРІР° (" << N << " x 10):\n";
+    cout << "Вывод массива (" << N << " x 10):\n";
     printArray(outputArray, N);
 
     return 0;

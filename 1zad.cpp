@@ -5,21 +5,21 @@
 #include <Windows.h>
 using namespace std;
 const double E = 0.0001;
-//рќ‘Ґ рќ‘™рќ‘›( рќ‘Ґ + 1) = 1
-// Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЂР°СЃС‡РµС‚Р° Р·РЅР°С‡РµРЅРёСЏ РёСЃС…РѕРґРЅРѕРіРѕ СѓСЂР°РІРЅРµРЅРёСЏ
+//?? ????( ?? + 1) = 1
+// Функция для расчета значения исходного уравнения
 double f(double x) {
 	return (2 * x) + cos(x) - 0;
 }
 
-// Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЂР°СЃС‡РµС‚Р° РїСЂРѕРёР·РІРѕРґРЅРѕР№ РёСЃС…РѕРґРЅРѕР№ С„СѓРЅРєС†РёРё
+// Функция для расчета производной исходной функции
 double f1(double x) {
 	return 2 - sin(x) - 0;// ??
 }
 
-//РјРµС‚РѕРґРѕРј РїРѕР»РѕРІРёРЅРЅРѕРіРѕ РґРµР»РµРЅРёСЏ
+//методом половинного деления
 int halfDivision(double a, double b, vector<double>& roots) {
 	if (f(a) * f(b) >= 0.0) {
-		cout << "РќРµРІРµСЂРЅС‹Р№ РёРЅС‚РµСЂРІР°Р»" << endl;
+		cout << "Неверный интервал" << endl;
 		return 0;
 	}
 	int k = 0;
@@ -39,10 +39,10 @@ int halfDivision(double a, double b, vector<double>& roots) {
 		k++;
 	}
 	roots.push_back(c);
-	cout << "РљРѕСЂРµРЅСЊ " << c << " СЃ " << k << " РёС‚РµСЂР°С†РёСЏРјРё" << endl;
+	cout << "Корень " << c << " с " << k << " итерациями" << endl;
 	return k;
 }
-//РњРµС‚РѕРґ РќСЊСЋС‚РѕРЅР°
+//Метод Ньютона
 int newtonMethod(double x0, vector<double>& roots) {
 	int k = 0;
 	double x1 = x0 - f(x0) / f1(x0);
@@ -53,10 +53,10 @@ int newtonMethod(double x0, vector<double>& roots) {
 		k++;
 	}
 	roots.push_back(x0);
-	cout << "РљРѕСЂРµРЅСЊ " << x0 << " СЃ " << k << " РёС‚РµСЂР°С†РёСЏРјРё" << endl;
+	cout << "Корень " << x0 << " с " << k << " итерациями" << endl;
 	return k;
 }
-//РјРµС‚РѕРґР° РїСЂРѕСЃС‚С‹С… РёС‚РµСЂР°С†РёР№
+//метода простых итераций
 int simpleIterations(double x0, vector<double>& roots) {
 	int k = 0;
 	double x1 = 1 / log(x0 + 1);
@@ -67,26 +67,26 @@ int simpleIterations(double x0, vector<double>& roots) {
 		k++;
 	}
 	roots.push_back(x0);
-	cout << "РљРѕСЂРµРЅСЊ " << x0 << " СЃ " << k << " РёС‚РµСЂР°С†РёСЏРјРё" << endl;
+	cout << "Корень " << x0 << " с " << k << " итерациями" << endl;
 	return k;
 }
 
 int main() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	cout << "РїСЂРѕРіСЂР°РјРјСѓ СѓС‚РѕС‡РЅРµРЅРёСЏ РєРѕСЂРЅСЏ РјРµС‚РѕРґРѕРј РїРѕР»РѕРІРёРЅРЅРѕРіРѕ РґРµР»РµРЅРёСЏ СЃ С‚РѕС‡РЅРѕСЃС‚СЊСЋ РґРѕ E" << endl;
+	cout << "программу уточнения корня методом половинного деления с точностью до E" << endl;
 	vector<double> roots;
 	int s1 = halfDivision(-1, 1, roots);
-	cout << endl << "РїСЂРѕРіСЂР°РјРјСѓ СѓС‚РѕС‡РЅРµРЅРёСЏ РєРѕСЂРЅСЏ РќСЊСЋС‚РѕРЅРѕРј СЃ С‚РѕС‡РЅРѕСЃС‚СЊСЋ РґРѕ E" << endl;
+	cout << endl << "программу уточнения корня Ньютоном с точностью до E" << endl;
 	int s2 = newtonMethod(10, roots);
-	cout << endl << "РјРµС‚РѕРґР° РїСЂРѕСЃС‚С‹С… РёС‚РµСЂР°С†РёР№" << endl;
+	cout << endl << "метода простых итераций" << endl;
 	int s3 = simpleIterations(2, roots);
-	cout << endl << "РІСЃРµ РєРѕСЂРЅРё СѓСЂР°РІРЅРµРЅРёСЏ" << endl;
+	cout << endl << "все корни уравнения" << endl;
 	for (double i : roots) {
 		cout << i << " ";
 	}
-	cout << endl << "РЎРєРѕСЂРѕСЃС‚СЊ СЃС…РѕРґРёРјРѕСЃС‚Рё: " << endl;
-	cout << endl << "РЈ РќСЊСЋС‚РѕРЅР° РёС‚РµСЂР°С†РёР№ " << s2 << endl;
-	cout << endl << "РЈ РјРµС‚РѕРґР° РїСЂРѕСЃС‚С‹С… РёС‚РµСЂР°С†РёР№  " << s3 <<  endl;
-	cout << endl << "РЈ  РјРµС‚РѕРґРѕРј РїРѕР»РѕРІРёРЅРЅРѕРіРѕ РґРµР»РµРЅРёСЏ " << s1 << endl;
+	cout << endl << "Скорость сходимости: " << endl;
+	cout << endl << "У Ньютона итераций " << s2 << endl;
+	cout << endl << "У метода простых итераций  " << s3 <<  endl;
+	cout << endl << "У  методом половинного деления " << s1 << endl;
 }
